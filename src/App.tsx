@@ -1,7 +1,8 @@
-import { Picture } from "./Picture"
+import { Game } from "./Game"
 
 export const App = () => {
+  
   return (
-    <Picture />
+    <Game />
   )
 }

@@ -1,47 +1,57 @@
-import coords from "./assets/coords.json"
+import { createSignal } from "solid-js"
+import Coords from "./assets/coords.json"
 import picture from "./assets/picture.jpg"
+import { Box } from "./Box"
 
-type percentCoords = [number, number]
+type Coords = [number, number]
 
-const isWithinPercent = (
-    clickPercent: percentCoords,
-    percent1: percentCoords,
-    percent2: percentCoords) =>
-       clickPercent[0] > percent1[0]
+const isWithinPercent = (clickPercent: Coords, percent1: Coords, percent2: Coords) =>
+    clickPercent[0] > percent1[0]
     && clickPercent[1] > percent1[1]
     && clickPercent[0] < percent2[0]
     && clickPercent[1] < percent2[1]
 
 export const Picture = () => {
 
+    const [getCoordsPx, setCoordsPx] = createSignal<Coords>([-100, -100]);
+
     const pictureClick = (e: MouseEvent & {
         currentTarget: HTMLImageElement;
         target: Element;
     }) => {
-        
-        const clickPercent: percentCoords = [
+
+        setCoordsPx([
+            e.pageX,
+            e.pageY
+        ])
+
+        const clickPercent: Coords = [
             e.pageX / e.currentTarget.width,
             e.pageY / e.currentTarget.height,
         ]
 
-        const index = coords.findIndex(({ 
-            percent1, 
-            percent2 
+        const index = Coords.findIndex(({
+            percent1,
+            percent2
         }) => isWithinPercent(
-            clickPercent, 
-            percent1 as percentCoords, 
-            percent2 as percentCoords))
- 
+            clickPercent,
+            percent1 as Coords,
+            percent2 as Coords))
+
         if (index != -1) {
             console.clear()
-            console.log(coords[index])
+            console.log(Coords[index])
         }
     }
 
     return (
-        <img 
-            src={picture} 
-            alt="picture.jpg"
-            onClick={pictureClick} />
+        <div class="relative">
+            <Box coordsPx={getCoordsPx} />
+            <img
+                src={picture}
+                alt="picture.jpg"
+                onClick={pictureClick} />
+        </div>
+
     )
 }
