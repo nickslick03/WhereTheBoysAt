@@ -1,14 +1,13 @@
-import { Accessor, createSignal, Setter } from "solid-js"
+import { JSX, Setter } from "solid-js"
 import picture from "./assets/picture.jpg"
-import { SelectorCircle } from "./SelectorCircle"
-import { Coords } from "./Game"
+import { Coords } from "./types"
 
-export const PictureContainer = ({ 
-    getCoordsPx, 
-    setCoordsPx 
+export const PictureContainer = ({
+    setCoordsPx,
+    children,
 } : { 
-    getCoordsPx: Accessor<Coords>
     setCoordsPx: Setter<Coords>
+    children?: JSX.Element
 }) => {
 
     const pictureClick = (e: MouseEvent) => setCoordsPx([
@@ -17,8 +16,8 @@ export const PictureContainer = ({
     ])
 
     return (
-        <div class="relative">
-            <SelectorCircle getCoordsPx={getCoordsPx} />
+        <div class="relative flex flex-col items-center">
+            {children}         
             <img
                 src={picture}
                 alt="picture.jpg"

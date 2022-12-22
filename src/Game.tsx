@@ -1,14 +1,21 @@
 import { PictureContainer } from "./PictureContainer"
-import charactersJSON from "./assets/coords.json"
+import charactersJSON from "./assets/characters.json"
 import picture from "./assets/picture.jpg"
 import { createSignal, For } from "solid-js"
+import { Coords } from "./types"
+import { SelectorCircle } from "./SelectorCircle"
+import { SelectorMenu } from "./SelectorMenu"
+import { Character } from "./types"
 
 const IMG_WIDTH = 960
 const IMG_HEIGHT = 960
 
-export type Coords = [number, number]
+const pxCoordsToPercent = (coords: Coords): Coords => [
+    coords[0] / window.innerWidth,
+    coords[1] / window.innerWidth
+]
 
-const isWithinPercent = (clickPercent: Coords, percent1: Coords, percent2: Coords) =>
+const clickIsWithinRange = (clickPercent: Coords, percent1: Coords, percent2: Coords) =>
     clickPercent[0] > percent1[0]
     && clickPercent[1] > percent1[1]
     && clickPercent[0] < percent2[0]
@@ -35,37 +42,53 @@ const randomIndicies = (range: number, length: number) => {
 
 export const Game = () => {
 
-    const [ getCoordsPx, setCoordsPx ] = createSignal<Coords>([-100, -100])
+    const [ getCoordsPx, setCoordsPx ] = createSignal<Coords>([-200, -200])
 
-    const randomCharacters: typeof charactersJSON =
+    const [ getCharacters, setCharacters ] = createSignal<Character[]>(
         randomIndicies(charactersJSON.length, 3)
-            .map(index => charactersJSON[index])
+        .map(index => charactersJSON[index]) as Character[]) 
 
-    console.log(randomCharacters)
+    const checkIsCorrect = (name: string) => {
+
+        const character = getCharacters().find(character => character.name === name) as Character
+        const isCorrect = clickIsWithinRange(
+            pxCoordsToPercent(getCoordsPx()),
+            character.percent1,
+            character.percent2
+        )
+        console.log(isCorrect)
+        setCoordsPx([-200, -200])
+    }
 
     return (
         <div>
-            <div class="flex justify-around">
-                <For each={randomCharacters} fallback={''}>
+            <div class="flex justify-around flex-wrap">
+                <For each={getCharacters()} fallback={''}>
                     {({ name, percent1: [X1, Y1], percent2: [X2, Y2] }) =>
-                        <div class="m-2 flex flex-col items-center">
+                        <div class="my-5 flex flex-col items-center">
                             <div>
                                 {name}
                             </div>
                             <div
-                                class="rounded shadow-md"
+                                class="rounded-lg shadow-md"
                                 style={{
                                     "height": `${(Y2 - Y1) * IMG_HEIGHT}px`,
-                                    "width": `${(X2 - X1) * IMG_WIDTH}px`,
+                                    "width":  `${(X2 - X1) * IMG_WIDTH}px`,
                                     "background-image": `url(${picture})`,
                                     "background-position": `-${X1 * IMG_WIDTH}px -${Y1 * IMG_HEIGHT}px`
                                 }}></div>
                         </div>}
                 </For>
             </div>
-            <PictureContainer
-                getCoordsPx={getCoordsPx}
-                setCoordsPx={setCoordsPx}/>
+            <PictureContainer setCoordsPx={setCoordsPx}>
+                    <>
+                        <SelectorCircle getCoordsPx={getCoordsPx} />
+                        <SelectorMenu 
+                            getCharactors={getCharacters} 
+                            getCoordsPx={getCoordsPx}
+                            checkIsCorrect={checkIsCorrect} />
+                    </>
+            </PictureContainer>
         </div>
 
     )
