@@ -1,9 +1,10 @@
 import { Accessor } from "solid-js"
+import { Coords } from "./types"
 
 export const SelectorCircle = ({
     getCoordsPx
 } : {
-    getCoordsPx: Accessor<[number, number]>
+    getCoordsPx: Accessor<Coords>
 }) =>
     <div 
         class="absolute translate-x-center translate-y-center 

@@ -46,17 +46,23 @@ export const Game = () => {
 
     const [ getCharacters, setCharacters ] = createSignal<Character[]>(
         randomIndicies(charactersJSON.length, 3)
-        .map(index => charactersJSON[index]) as Character[]) 
+            .map(index => charactersJSON[index]) as Character[])
 
     const checkIsCorrect = (name: string) => {
 
-        const character = getCharacters().find(character => character.name === name) as Character
+        const characterIndex = getCharacters()
+            .findIndex(character => character.name === name)
         const isCorrect = clickIsWithinRange(
             pxCoordsToPercent(getCoordsPx()),
-            character.percent1,
-            character.percent2
+            getCharacters()[characterIndex].percent1,
+            getCharacters()[characterIndex].percent2
         )
-        console.log(isCorrect)
+        
+        if (isCorrect) setCharacters((characters) => [
+            ...characters.slice(0, characterIndex),
+            ...characters.slice(characterIndex + 1)
+        ])
+
         setCoordsPx([-200, -200])
     }
 
@@ -73,7 +79,7 @@ export const Game = () => {
                                 class="rounded-lg shadow-md"
                                 style={{
                                     "height": `${(Y2 - Y1) * IMG_HEIGHT}px`,
-                                    "width":  `${(X2 - X1) * IMG_WIDTH}px`,
+                                    "width": `${(X2 - X1) * IMG_WIDTH}px`,
                                     "background-image": `url(${picture})`,
                                     "background-position": `-${X1 * IMG_WIDTH}px -${Y1 * IMG_HEIGHT}px`
                                 }}></div>
@@ -81,15 +87,15 @@ export const Game = () => {
                 </For>
             </div>
             <PictureContainer setCoordsPx={setCoordsPx}>
-                    <>
-                        <SelectorCircle getCoordsPx={getCoordsPx} />
-                        <SelectorMenu 
-                            getCharactors={getCharacters} 
-                            getCoordsPx={getCoordsPx}
-                            checkIsCorrect={checkIsCorrect} />
-                    </>
+                <>
+                    <SelectorCircle getCoordsPx={getCoordsPx} />
+                    <SelectorMenu
+                        getCharactors={getCharacters}
+                        getCoordsPx={getCoordsPx}
+                        setCoordsPx={setCoordsPx}
+                        checkIsCorrect={checkIsCorrect} />
+                </>
             </PictureContainer>
         </div>
-
     )
 }
