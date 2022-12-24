@@ -1,4 +1,4 @@
-import { Accessor, Setter, For, createMemo } from "solid-js"
+import { Accessor, createMemo, For, Setter } from "solid-js"
 import { Character, Coords } from "./types"
 
 export const SelectorMenu = ({
@@ -14,20 +14,20 @@ export const SelectorMenu = ({
 }) => {
 
     const leftPixelOffset = createMemo(() => 
-        getCoordsPx()[0] / window.outerWidth < .5
+        getCoordsPx()[0] / window.innerWidth < .5
             ? 100
             : -100)
 
     return (
         <div 
-        class="absolute translate-y-center translate-x-center
+        class="absolute -translate-x-1/2 -translate-y-1/2
         bg-slate-50 flex flex-col items-center 
         p-1 gap-1 rounded shadow"
         style={{
             "left": getCoordsPx()[0] + leftPixelOffset() + "px",
             "top":  getCoordsPx()[1] - 100 + "px"
         }}>
-            <For each={getCharactors()} fallback={''}>
+            <For each={getCharactors()}>
                 {({name}) => 
                 <button 
                     class="p-1 rounded inline

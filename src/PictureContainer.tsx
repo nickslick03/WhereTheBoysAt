@@ -16,7 +16,7 @@ export const PictureContainer = ({
     ])
 
     return (
-        <div class="relative flex flex-col items-center">
+        <div class="relative flex flex-col items-center w-full">
             {children}         
             <img
                 src={picture}

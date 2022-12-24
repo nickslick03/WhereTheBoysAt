@@ -1,14 +1,12 @@
-import { PictureContainer } from "./PictureContainer"
+import { createEffect, createSignal } from "solid-js"
 import charactersJSON from "./assets/characters.json"
-import picture from "./assets/picture.jpg"
-import { createSignal, For } from "solid-js"
-import { Coords } from "./types"
+import { CharacterDisplay } from "./CharacterDisplay"
+import { FloatingIcon } from "./FloatingIcon"
+import { PictureContainer } from "./PictureContainer"
 import { SelectorCircle } from "./SelectorCircle"
 import { SelectorMenu } from "./SelectorMenu"
-import { Character } from "./types"
-
-const IMG_WIDTH = 960
-const IMG_HEIGHT = 960
+import { Timer } from "./Timer"
+import { Character, Coords } from "./types"
 
 const pxCoordsToPercent = (coords: Coords): Coords => [
     coords[0] / window.innerWidth,
@@ -48,46 +46,53 @@ export const Game = () => {
         randomIndicies(charactersJSON.length, 3)
             .map(index => charactersJSON[index]) as Character[])
 
+    const [ getSeconds, setSeconds ] = createSignal(0)
+
+    const [ getIsCorrect, setIsCorrect ] = createSignal<boolean | null>(null)
+
+    createEffect(() => {
+        if (getCoordsPx()[0] !== -200) setIsCorrect(null)
+    })
+
+    const intervalID = setInterval(() => {
+        setSeconds(prev => prev + 1)
+    }, 1000)
+
     const checkIsCorrect = (name: string) => {
 
         const characterIndex = getCharacters()
             .findIndex(character => character.name === name)
-        const isCorrect = clickIsWithinRange(
-            pxCoordsToPercent(getCoordsPx()),
-            getCharacters()[characterIndex].percent1,
-            getCharacters()[characterIndex].percent2
+
+        setIsCorrect(
+            clickIsWithinRange(
+                pxCoordsToPercent(getCoordsPx()),
+                getCharacters()[characterIndex].percent1,
+                getCharacters()[characterIndex].percent2)
         )
         
-        if (isCorrect) setCharacters((characters) => [
+        if (getIsCorrect()) {
+            
+            const length = setCharacters((characters) => [
             ...characters.slice(0, characterIndex),
             ...characters.slice(characterIndex + 1)
-        ])
+            ]).length
+
+            if (length === 0) clearInterval(intervalID)
+        }
 
         setCoordsPx([-200, -200])
     }
 
     return (
-        <div>
-            <div class="flex justify-around flex-wrap">
-                <For each={getCharacters()} fallback={''}>
-                    {({ name, percent1: [X1, Y1], percent2: [X2, Y2] }) =>
-                        <div class="my-5 flex flex-col items-center">
-                            <div>
-                                {name}
-                            </div>
-                            <div
-                                class="rounded-lg shadow-md"
-                                style={{
-                                    "height": `${(Y2 - Y1) * IMG_HEIGHT}px`,
-                                    "width": `${(X2 - X1) * IMG_WIDTH}px`,
-                                    "background-image": `url(${picture})`,
-                                    "background-position": `-${X1 * IMG_WIDTH}px -${Y1 * IMG_HEIGHT}px`
-                                }}></div>
-                        </div>}
-                </For>
-            </div>
+        <div class="flex flex-col items-center gap-6">
+            <CharacterDisplay getCharacters={getCharacters} />
+            <Timer getSeconds={getSeconds} />
             <PictureContainer setCoordsPx={setCoordsPx}>
                 <>
+                    <FloatingIcon 
+                    getCoordsPx={getCoordsPx} 
+                    getIsCorrect={getIsCorrect}
+                    setSeconds={setSeconds}/>
                     <SelectorCircle getCoordsPx={getCoordsPx} />
                     <SelectorMenu
                         getCharactors={getCharacters}
