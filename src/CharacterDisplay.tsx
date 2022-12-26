@@ -12,10 +12,15 @@ export const CharacterDisplay = ({
 }) => {
 
     return (
-        <div class="flex justify-around flex-wrap w-full">
+        <div class="w-full sticky top-0 p-2 z-10
+        bg-white shadow-md
+        flex justify-around flex-wrap">
             <For each={getCharacters()}>
                 {({ name, percent1: [X1, Y1], percent2: [X2, Y2] }) =>
                     <div class="flex flex-col items-center">
+                        <div>
+                            {name}
+                        </div> 
                         <div
                             class="rounded-lg shadow-md"
                             style={{
@@ -24,9 +29,6 @@ export const CharacterDisplay = ({
                                 "background-image": `url(${picture})`,
                                 "background-position": `-${X1 * IMG_WIDTH}px -${Y1 * IMG_HEIGHT}px`
                             }}></div>
-                        <div>
-                            {name}
-                        </div>    
                     </div>}
             </For>
         </div>

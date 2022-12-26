@@ -20,7 +20,7 @@ export const SelectorMenu = ({
 
     return (
         <div 
-        class="absolute -translate-x-1/2 -translate-y-1/2
+        class="absolute z-20 -translate-x-1/2 -translate-y-1/2
         bg-slate-50 flex flex-col items-center 
         p-1 gap-1 rounded shadow"
         style={{

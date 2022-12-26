@@ -7,7 +7,7 @@ export const SelectorCircle = ({
     getCoordsPx: Accessor<Coords>
 }) =>
     <div 
-        class="absolute -translate-x-1/2 -translate-y-1/2
+        class="absolute z-20 -translate-x-1/2 -translate-y-1/2
         w-sizable h-sizable 
         bg-sky-700 bg-opacity-50
         rounded-max border-2 border-black

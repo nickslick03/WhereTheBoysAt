@@ -84,9 +84,9 @@ export const Game = () => {
     }
 
     return (
-        <div class="flex flex-col items-center gap-6">
-            <CharacterDisplay getCharacters={getCharacters} />
+        <div class="flex flex-col items-center">
             <Timer getSeconds={getSeconds} />
+            <CharacterDisplay getCharacters={getCharacters} />
             <PictureContainer setCoordsPx={setCoordsPx}>
                 <>
                     <FloatingIcon 
