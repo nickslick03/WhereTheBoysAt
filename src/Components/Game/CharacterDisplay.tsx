@@ -1,6 +1,6 @@
 import { Accessor, For } from "solid-js"
-import picture from "./assets/picture.jpg"
-import { Character } from "./types"
+import picture from "../../assets/picture.jpg"
+import { Character } from "../../types"
 
 const IMG_WIDTH = 960
 const IMG_HEIGHT = 960

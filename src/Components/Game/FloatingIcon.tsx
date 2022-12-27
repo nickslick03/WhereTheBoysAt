@@ -1,5 +1,5 @@
 import { Accessor, createEffect, createMemo, Setter } from "solid-js"
-import { Coords } from "./types"
+import { Coords } from "../../types"
 
 
 const animation = {
@@ -15,11 +15,9 @@ const keyframes = [
 export const FloatingIcon = ({
     getCoordsPx,
     getIsCorrect,
-    setSeconds
 } : {
     getCoordsPx: Accessor<Coords>
     getIsCorrect: Accessor<boolean | null>
-    setSeconds: Setter<number>
 }) => {
 
     let ref: HTMLDivElement | undefined
@@ -39,7 +37,6 @@ export const FloatingIcon = ({
 
     createEffect(() => {
         if (getIsCorrect() !== null) ref?.animate(keyframes, animation)
-        if (getIsCorrect() === false) setSeconds(prev => prev + 10)
     })
 
     return (

@@ -1,5 +1,5 @@
 import { Accessor } from "solid-js"
-import { Coords } from "./types"
+import { Coords } from "../../types"
 
 export const SelectorCircle = ({
     getCoordsPx

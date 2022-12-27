@@ -1,5 +1,5 @@
 import { Accessor, createMemo, For, Setter } from "solid-js"
-import { Character, Coords } from "./types"
+import { Character, Coords } from "../../types"
 
 export const SelectorMenu = ({
     getCharactors,

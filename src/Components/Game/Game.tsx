@@ -1,12 +1,12 @@
-import { createEffect, createSignal } from "solid-js"
-import charactersJSON from "./assets/characters.json"
+import { createEffect, createMemo, createSignal } from "solid-js"
+import charactersJSON from "../../assets/characters.json"
 import { CharacterDisplay } from "./CharacterDisplay"
 import { FloatingIcon } from "./FloatingIcon"
 import { PictureContainer } from "./PictureContainer"
 import { SelectorCircle } from "./SelectorCircle"
 import { SelectorMenu } from "./SelectorMenu"
 import { Timer } from "./Timer"
-import { Character, Coords } from "./types"
+import { Character, Coords } from "../../types"
 
 const pxCoordsToPercent = (coords: Coords): Coords => [
     coords[0] / window.innerWidth,
@@ -50,12 +50,14 @@ export const Game = () => {
 
     const [ getIsCorrect, setIsCorrect ] = createSignal<boolean | null>(null)
 
+    const characterLength = createMemo(() => getCharacters().length)
+
     createEffect(() => {
         if (getCoordsPx()[0] !== -200) setIsCorrect(null)
     })
 
-    const intervalID = setInterval(() => {
-        setSeconds(prev => prev + 1)
+    setInterval(() => {
+        if (characterLength() > 0) setSeconds(prev => prev + 1)
     }, 1000)
 
     const checkIsCorrect = (name: string) => {
@@ -63,21 +65,21 @@ export const Game = () => {
         const characterIndex = getCharacters()
             .findIndex(character => character.name === name)
 
-        setIsCorrect(
+        if (setIsCorrect(
             clickIsWithinRange(
                 pxCoordsToPercent(getCoordsPx()),
                 getCharacters()[characterIndex].percent1,
                 getCharacters()[characterIndex].percent2)
-        )
-        
-        if (getIsCorrect()) {
-            
-            const length = setCharacters((characters) => [
+            )) {
+
+            setCharacters((characters) => [
             ...characters.slice(0, characterIndex),
             ...characters.slice(characterIndex + 1)
             ]).length
 
-            if (length === 0) clearInterval(intervalID)
+        } else {
+
+            setSeconds(prev => prev + 10)
         }
 
         setCoordsPx([-200, -200])
@@ -91,8 +93,7 @@ export const Game = () => {
                 <>
                     <FloatingIcon 
                     getCoordsPx={getCoordsPx} 
-                    getIsCorrect={getIsCorrect}
-                    setSeconds={setSeconds}/>
+                    getIsCorrect={getIsCorrect}/>
                     <SelectorCircle getCoordsPx={getCoordsPx} />
                     <SelectorMenu
                         getCharactors={getCharacters}

@@ -1,6 +1,6 @@
 import { JSX, Setter } from "solid-js"
-import picture from "./assets/picture.jpg"
-import { Coords } from "./types"
+import picture from "../../assets/picture.jpg"
+import { Coords } from "../../types"
 
 export const PictureContainer = ({
     setCoordsPx,

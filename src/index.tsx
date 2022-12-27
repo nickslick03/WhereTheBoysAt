@@ -1,6 +1,6 @@
 import { render } from 'solid-js/web'
-import { App } from './App'
-import './index.css'
+import { App } from './Components/App'
+import './assets/index.css'
 
 render(
     () => <App />,
