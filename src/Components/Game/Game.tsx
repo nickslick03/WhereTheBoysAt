@@ -7,6 +7,7 @@ import { SelectorCircle } from "./SelectorCircle"
 import { SelectorMenu } from "./SelectorMenu"
 import { Timer } from "./Timer"
 import { Character, Coords } from "../../types"
+import { A } from "@solidjs/router"
 
 const pxCoordsToPercent = (coords: Coords): Coords => [
     coords[0] / window.innerWidth,
@@ -87,6 +88,11 @@ export const Game = () => {
 
     return (
         <div class="flex flex-col items-center">
+            <div class="button">
+                <A href="/">
+                    Back to Home
+                </A>
+            </div>
             <Timer getSeconds={getSeconds} />
             <CharacterDisplay getCharacters={getCharacters} />
             <PictureContainer setCoordsPx={setCoordsPx}>

@@ -1,7 +1,12 @@
+import { Router } from '@solidjs/router'
 import { render } from 'solid-js/web'
-import { App } from './Components/App'
 import './assets/index.css'
+import { App } from './Components/App'
 
 render(
-    () => <App />,
+    () => (
+    <Router>
+        <App />
+    </Router>
+    ),
     document.getElementById('root') as HTMLElement)
