@@ -2,10 +2,27 @@
 @tailwind components;
 @tailwind utilities;
 
+#root {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
 @layer components {
     .button {
-        @apply p-2 bg-gray-200 rounded-lg shadow
+        @apply block p-2 w-fit h-fit 
+        bg-gray-200 rounded-lg shadow
         hover:bg-gray-300
         active:bg-gray-400
+    }
+
+    .th {
+        @apply font-bold p-2
+        bg-gray-400 rounded shadow
+    }
+
+    .tr {
+        @apply p-2
+        bg-gray-300 rounded shadow
     }
 }

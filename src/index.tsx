@@ -7,6 +7,5 @@ render(
     () => (
     <Router>
         <App />
-    </Router>
-    ),
+    </Router>),
     document.getElementById('root') as HTMLElement)

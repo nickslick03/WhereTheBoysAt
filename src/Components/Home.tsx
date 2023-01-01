@@ -1,9 +1,11 @@
 import { A } from "@solidjs/router"
+import { BackgroundContainer } from "./BackgroundContainer"
 
 export const Home = () => {
 
     return (
-        <div class="flex justify-around">
+        <BackgroundContainer>
+            <div class="flex justify-around">
                 <A  
                     class="button"
                     href="./game">
@@ -11,9 +13,10 @@ export const Home = () => {
                 </A>
                 <A  
                     class="button"
-                    href="">
+                    href="./scores">
                     View Scores
-                </A>
-        </div>
+                </A>    
+            </div>
+        </BackgroundContainer>       
     )
 }

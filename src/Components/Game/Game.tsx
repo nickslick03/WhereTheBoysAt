@@ -1,4 +1,4 @@
-import { createEffect, createMemo, createSignal } from "solid-js"
+import { createEffect, createSignal } from "solid-js"
 import charactersJSON from "../../assets/characters.json"
 import { CharacterDisplay } from "./CharacterDisplay"
 import { FloatingIcon } from "./FloatingIcon"
@@ -51,14 +51,12 @@ export const Game = () => {
 
     const [ getIsCorrect, setIsCorrect ] = createSignal<boolean | null>(null)
 
-    const characterLength = createMemo(() => getCharacters().length)
-
     createEffect(() => {
         if (getCoordsPx()[0] !== -200) setIsCorrect(null)
     })
 
-    setInterval(() => {
-        if (characterLength() > 0) setSeconds(prev => prev + 1)
+    const intervalID = setInterval(() => {
+        setSeconds(prev => prev + 1)
     }, 1000)
 
     const checkIsCorrect = (name: string) => {
@@ -66,21 +64,20 @@ export const Game = () => {
         const characterIndex = getCharacters()
             .findIndex(character => character.name === name)
 
-        if (setIsCorrect(
+        const isCorrect = setIsCorrect(
             clickIsWithinRange(
                 pxCoordsToPercent(getCoordsPx()),
                 getCharacters()[characterIndex].percent1,
-                getCharacters()[characterIndex].percent2)
-            )) {
+                getCharacters()[characterIndex].percent2))
 
-            setCharacters((characters) => [
+        if (isCorrect) {
+
+            const length = setCharacters((characters) => [
             ...characters.slice(0, characterIndex),
             ...characters.slice(characterIndex + 1)
             ]).length
 
-        } else {
-
-            setSeconds(prev => prev + 10)
+            if (length === 0) clearInterval(intervalID)
         }
 
         setCoordsPx([-200, -200])
@@ -88,14 +85,15 @@ export const Game = () => {
 
     return (
         <div class="flex flex-col items-center">
-            <div class="button">
-                <A href="/">
+                <A 
+                    class="button"
+                    href="/">
                     Back to Home
                 </A>
-            </div>
             <Timer getSeconds={getSeconds} />
             <CharacterDisplay getCharacters={getCharacters} />
-            <PictureContainer setCoordsPx={setCoordsPx}>
+            <PictureContainer 
+            setCoordsPx={setCoordsPx}>
                 <>
                     <FloatingIcon 
                     getCoordsPx={getCoordsPx} 
