@@ -1,4 +1,4 @@
-import { Accessor, createEffect, createMemo, Setter } from "solid-js"
+import { Accessor, createEffect, createMemo } from "solid-js"
 import { Coords } from "../../types"
 
 
@@ -49,11 +49,13 @@ export const FloatingIcon = ({
                 "top":  prevCoordsPx()[1] + "px"
             }}
             ref={ref}>
-            {getIsCorrect() ? '✅' : <div>
-                    ❌
-                    <br />
-                    + 10 seconds
-                </div>}
+            {getIsCorrect() !== false 
+                ? '✅'
+                :   <>
+                        ❌
+                        <br />
+                        + 10 seconds
+                    </>}
         </div>
     )
 }

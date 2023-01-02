@@ -1,4 +1,4 @@
-import { createEffect, createSignal } from "solid-js"
+import { createEffect, createSignal, Show } from "solid-js"
 import charactersJSON from "../../assets/characters.json"
 import { CharacterDisplay } from "./CharacterDisplay"
 import { FloatingIcon } from "./FloatingIcon"
@@ -8,6 +8,7 @@ import { SelectorMenu } from "./SelectorMenu"
 import { Timer } from "./Timer"
 import { Character, Coords } from "../../types"
 import { A } from "@solidjs/router"
+import { GameOver } from "./GameOver"
 
 const pxCoordsToPercent = (coords: Coords): Coords => [
     coords[0] / window.innerWidth,
@@ -78,23 +79,30 @@ export const Game = () => {
             ]).length
 
             if (length === 0) clearInterval(intervalID)
+        
+        } else {
+
+            setSeconds(prev => prev + 10)
         }
 
         setCoordsPx([-200, -200])
     }
 
     return (
-        <div class="flex flex-col items-center">
+        <>
+            <Show when={getCharacters().length === 0}>
+                <GameOver seconds={getSeconds()}/>
+            </Show>
+            <div class="flex flex-col items-center">
                 <A 
                     class="button"
                     href="/">
                     Back to Home
                 </A>
-            <Timer getSeconds={getSeconds} />
-            <CharacterDisplay getCharacters={getCharacters} />
-            <PictureContainer 
-            setCoordsPx={setCoordsPx}>
-                <>
+                <Timer getSeconds={getSeconds} />
+                <CharacterDisplay getCharacters={getCharacters} />
+                <PictureContainer 
+                setCoordsPx={setCoordsPx}>
                     <FloatingIcon 
                     getCoordsPx={getCoordsPx} 
                     getIsCorrect={getIsCorrect}/>
@@ -104,8 +112,8 @@ export const Game = () => {
                         getCoordsPx={getCoordsPx}
                         setCoordsPx={setCoordsPx}
                         checkIsCorrect={checkIsCorrect} />
-                </>
-            </PictureContainer>
-        </div>
+                </PictureContainer>
+            </div>
+        </>
     )
 }
