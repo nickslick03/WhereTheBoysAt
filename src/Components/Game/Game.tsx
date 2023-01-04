@@ -1,5 +1,4 @@
-import { createEffect, createSignal, Show } from "solid-js"
-import charactersJSON from "../../assets/characters.json"
+import { createEffect, createResource, createSignal, Show } from "solid-js"
 import { CharacterDisplay } from "./CharacterDisplay"
 import { FloatingIcon } from "./FloatingIcon"
 import { PictureContainer } from "./PictureContainer"
@@ -9,6 +8,7 @@ import { Timer } from "./Timer"
 import { Character, Coords } from "../../types"
 import { A } from "@solidjs/router"
 import { GameOver } from "./GameOver"
+import { supabase } from "../.."
 
 const pxCoordsToPercent = (coords: Coords): Coords => [
     coords[0] / window.innerWidth,
@@ -40,17 +40,45 @@ const randomIndicies = (range: number, length: number) => {
     return indicies
 }
 
+const fetchCharacter = async (id: number) =>
+    (await supabase.from('character_coords')
+        .select()
+        .eq('id', id))
+        .data![0] as unknown as { 
+                name: string, 
+                x1: number, 
+                y1: number, 
+                x2: number, 
+                y2: number
+            }
+
+const fetchCharacters = async () => {
+    const indicies = randomIndicies(66, 3)
+    const characters = await Promise.all(indicies.map(index => fetchCharacter(index + 1)))
+    return characters.map<Character>(({ 
+        name,
+        x1,
+        y1,
+        x2,
+        y2
+    }) => ({
+        name,
+        percent1: [x1, y1],
+        percent2: [x2, y2]
+    }))
+}
+
+
 export const Game = () => {
 
-    const [ getCoordsPx, setCoordsPx ] = createSignal<Coords>([-200, -200])
+    const [getCoordsPx, setCoordsPx] = createSignal<Coords>([-200, -200])
 
-    const [ getCharacters, setCharacters ] = createSignal<Character[]>(
-        randomIndicies(charactersJSON.length, 3)
-            .map(index => charactersJSON[index]) as Character[])
+    const [getCharacters, setCharacters] = createSignal<Character[]>()
+    fetchCharacters().then((value) => setCharacters(value))
 
-    const [ getSeconds, setSeconds ] = createSignal(0)
+    const [getSeconds, setSeconds] = createSignal(0)
 
-    const [ getIsCorrect, setIsCorrect ] = createSignal<boolean | null>(null)
+    const [getIsCorrect, setIsCorrect] = createSignal<boolean | null>(null)
 
     createEffect(() => {
         if (getCoordsPx()[0] !== -200) setIsCorrect(null)
@@ -62,24 +90,24 @@ export const Game = () => {
 
     const checkIsCorrect = (name: string) => {
 
-        const characterIndex = getCharacters()
+        const characterIndex = getCharacters()!
             .findIndex(character => character.name === name)
 
         const isCorrect = setIsCorrect(
             clickIsWithinRange(
                 pxCoordsToPercent(getCoordsPx()),
-                getCharacters()[characterIndex].percent1,
-                getCharacters()[characterIndex].percent2))
+                getCharacters()![characterIndex].percent1,
+                getCharacters()![characterIndex].percent2))
 
         if (isCorrect) {
 
             const length = setCharacters((characters) => [
-            ...characters.slice(0, characterIndex),
-            ...characters.slice(characterIndex + 1)
+                ...characters!.slice(0, characterIndex),
+                ...characters!.slice(characterIndex + 1)
             ]).length
 
             if (length === 0) clearInterval(intervalID)
-        
+
         } else {
 
             setSeconds(prev => prev + 10)
@@ -90,30 +118,34 @@ export const Game = () => {
 
     return (
         <>
-            <Show when={getCharacters().length === 0}>
-                <GameOver seconds={getSeconds()}/>
+            <Show 
+                when={getCharacters() !== undefined} 
+                fallback={<div class="text-center">loading...</div>}>
+                <Show when={getCharacters()?.length === 0}>
+                    <GameOver seconds={getSeconds()} />
+                </Show>
+                <div class="flex flex-col items-center">
+                    <A
+                        class="button"
+                        href="/">
+                        Back to Home
+                    </A>
+                    <Timer getSeconds={getSeconds} />
+                    <CharacterDisplay getCharacters={getCharacters} />
+                    <PictureContainer
+                        setCoordsPx={setCoordsPx}>
+                        <FloatingIcon
+                            getCoordsPx={getCoordsPx}
+                            getIsCorrect={getIsCorrect} />
+                        <SelectorCircle getCoordsPx={getCoordsPx} />
+                        <SelectorMenu
+                            getCharactors={getCharacters}
+                            getCoordsPx={getCoordsPx}
+                            setCoordsPx={setCoordsPx}
+                            checkIsCorrect={checkIsCorrect} />
+                    </PictureContainer>
+                </div>
             </Show>
-            <div class="flex flex-col items-center">
-                <A 
-                    class="button"
-                    href="/">
-                    Back to Home
-                </A>
-                <Timer getSeconds={getSeconds} />
-                <CharacterDisplay getCharacters={getCharacters} />
-                <PictureContainer 
-                setCoordsPx={setCoordsPx}>
-                    <FloatingIcon 
-                    getCoordsPx={getCoordsPx} 
-                    getIsCorrect={getIsCorrect}/>
-                    <SelectorCircle getCoordsPx={getCoordsPx} />
-                    <SelectorMenu
-                        getCharactors={getCharacters}
-                        getCoordsPx={getCoordsPx}
-                        setCoordsPx={setCoordsPx}
-                        checkIsCorrect={checkIsCorrect} />
-                </PictureContainer>
-            </div>
         </>
     )
 }

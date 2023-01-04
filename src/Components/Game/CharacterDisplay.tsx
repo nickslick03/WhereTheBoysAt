@@ -8,7 +8,7 @@ const IMG_HEIGHT = 960
 export const CharacterDisplay = ({
     getCharacters
 } : {
-    getCharacters: Accessor<Character[]>
+    getCharacters: Accessor<Character[] | undefined>
 }) => {
 
     return (

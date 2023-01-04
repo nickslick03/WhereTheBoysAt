@@ -7,7 +7,7 @@ export const SelectorMenu = ({
     setCoordsPx,
     checkIsCorrect
 } : {
-    getCharactors: Accessor<Character[]>,
+    getCharactors: Accessor<Character[] | undefined>,
     getCoordsPx: Accessor<Coords>,
     setCoordsPx: Setter<Coords>,
     checkIsCorrect: (name: string) => void
