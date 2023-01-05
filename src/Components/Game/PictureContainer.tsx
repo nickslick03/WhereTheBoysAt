@@ -11,7 +11,7 @@ export const PictureContainer = ({
 }) => {
 
     const pictureClick = (e: MouseEvent) => setCoordsPx([
-        e.offsetX,
+        e.pageX,
         e.offsetY
     ])
 

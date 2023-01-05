@@ -44,7 +44,7 @@ export const Scores = () => {
                                     <td class="tr">
                                         {name}
                                     </td>
-                                    <td class="tr">
+                                    <td class="tr whitespace-nowrap">
                                         {formatSeconds(seconds)}
                                     </td>
                                 </tr>}

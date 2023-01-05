@@ -16,7 +16,7 @@ export const GameOver = ({
                 name: inputRef!.value,
                 seconds
             })
-        history.pushState(null, '', './scores')
+        history.pushState(null, '', '/WhereTheBoysAt/')
         history.go()
     }
 
