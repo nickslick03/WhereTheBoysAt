@@ -20,7 +20,7 @@ export const Scores = () => {
             <div class="flex flex-col gap-8 justify-center items-center">
                 <A 
                     class="button"
-                    href="/">
+                    href="..">
                     Back to Home
                 </A>
                 <Show 

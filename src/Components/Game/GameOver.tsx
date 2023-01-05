@@ -16,7 +16,7 @@ export const GameOver = ({
                 name: inputRef!.value,
                 seconds
             })
-        history.pushState(null, '', '/scores')
+        history.pushState(null, '', './scores')
         history.go()
     }
 
@@ -50,7 +50,7 @@ export const GameOver = ({
                     </div>
                     <div class="flex justify-around gap-5">
                         <A 
-                            href="/" 
+                            href="../" 
                             class="button">
                             Back to Home
                         </A>

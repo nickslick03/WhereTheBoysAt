@@ -126,7 +126,7 @@ export const Game = () => {
                 <div class="flex flex-col items-center">
                     <A
                         class="button"
-                        href="/">
+                        href="../">
                         Back to Home
                     </A>
                     <Timer getSeconds={getSeconds} />
