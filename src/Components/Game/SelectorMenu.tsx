@@ -27,8 +27,7 @@ export const SelectorMenu = ({
             "left": getCoordsPx()[0] + leftPixelOffset() + "px",
             "top":  getCoordsPx()[1] - 100 + "px"
         }}>
-            <For each={getCharactors()}>
-                {({name}) => 
+            <For each={getCharactors()}>{({name}) => 
                 <button 
                     class="p-1 rounded inline
                     hover:bg-slate-300 

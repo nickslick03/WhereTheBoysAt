@@ -73,8 +73,7 @@ export const Game = () => {
 
     const [getCoordsPx, setCoordsPx] = createSignal<Coords>([-200, -200])
 
-    const [getCharacters, setCharacters] = createSignal<Character[]>()
-    fetchCharacters().then((value) => setCharacters(value))
+    const [getCharacters, {mutate: setCharacters}] = createResource(fetchCharacters)
 
     const [getSeconds, setSeconds] = createSignal(0)
 
@@ -119,7 +118,7 @@ export const Game = () => {
     return (
         <>
             <Show 
-                when={getCharacters() !== undefined} 
+                when={!getCharacters.loading} 
                 fallback={<div class="text-center">loading...</div>}>
                 <Show when={getCharacters()?.length === 0}>
                     <GameOver seconds={getSeconds()} />

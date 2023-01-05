@@ -15,8 +15,7 @@ export const CharacterDisplay = ({
         <div class="w-full sticky top-0 p-2 z-10
         bg-white shadow-md
         flex justify-around flex-wrap">
-            <For each={getCharacters()}>
-                {({ name, percent1: [X1, Y1], percent2: [X2, Y2] }) =>
+            <For each={getCharacters()}>{({ name, percent1: [X1, Y1], percent2: [X2, Y2] }) =>
                     <div class="flex flex-col items-center">
                         <div>
                             {name}
