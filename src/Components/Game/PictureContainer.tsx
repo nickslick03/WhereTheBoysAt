@@ -4,16 +4,28 @@ import { Coords } from "../../types"
 
 export const PictureContainer = ({
     setCoordsPx,
+    setCoordsPercent,
     children,
 } : { 
     setCoordsPx: Setter<Coords>
+    setCoordsPercent: Setter<Coords>
     children?: JSX.Element
 }) => {
 
-    const pictureClick = (e: MouseEvent) => setCoordsPx([
-        e.pageX,
-        e.offsetY
-    ])
+    let ref: HTMLImageElement | undefined
+
+    const pictureClick = (e: MouseEvent) => {
+
+        setCoordsPx([
+            e.offsetX,
+            e.offsetY
+        ])
+        
+        setCoordsPercent([
+            e.offsetX / ref!.offsetWidth,
+            e.offsetY / ref!.offsetHeight
+        ])
+    }
 
     return (
         <div class="relative 
@@ -24,6 +36,7 @@ export const PictureContainer = ({
                 src={picture}
                 alt="picture.jpg"
                 class="w-full"
+                ref={ref}
                 onClick={pictureClick} />
         </div>
 

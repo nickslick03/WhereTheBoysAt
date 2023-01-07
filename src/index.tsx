@@ -1,4 +1,4 @@
-import { Router } from '@solidjs/router'
+import { Router, hashIntegration } from '@solidjs/router'
 import { render } from 'solid-js/web'
 import { App } from './Components/App'
 
@@ -10,7 +10,7 @@ export const supabase = createClient('https://qjplzhpnqoewvnblthed.supabase.co',
 
 render(
     () => (
-        <Router>
+        <Router source={hashIntegration()}>
             <App />
         </Router>),
     document.getElementById('root')!)

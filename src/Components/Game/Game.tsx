@@ -10,11 +10,6 @@ import { A } from "@solidjs/router"
 import { GameOver } from "./GameOver"
 import { supabase } from "../.."
 
-const pxCoordsToPercent = (coords: Coords): Coords => [
-    coords[0] / window.innerWidth,
-    coords[1] / window.innerWidth
-]
-
 const clickIsWithinRange = (clickPercent: Coords, percent1: Coords, percent2: Coords) =>
     clickPercent[0] > percent1[0]
     && clickPercent[1] > percent1[1]
@@ -29,12 +24,10 @@ const randomIndicies = (range: number, length: number) => {
         do {
             indicies[i] = Math.floor(Math.random() * range)
         } while (
-            indicies.some((num, j) =>
+            indicies.some((num, j) => // returns true if there's a repeat index
                 i !== j
                     ? num === indicies[i]
-                    : false
-            )
-        )
+                    : false))
     }
 
     return indicies
@@ -68,10 +61,11 @@ const fetchCharacters = async () => {
     }))
 }
 
-
 export const Game = () => {
 
     const [getCoordsPx, setCoordsPx] = createSignal<Coords>([-200, -200])
+
+    const [getCoordsPercent, setCoordsPercent] = createSignal<Coords>([0, 0])
 
     const [getCharacters, {mutate: setCharacters}] = createResource(fetchCharacters)
 
@@ -94,7 +88,7 @@ export const Game = () => {
 
         const isCorrect = setIsCorrect(
             clickIsWithinRange(
-                pxCoordsToPercent(getCoordsPx()),
+                getCoordsPercent(),
                 getCharacters()![characterIndex].percent1,
                 getCharacters()![characterIndex].percent2))
 
@@ -126,13 +120,14 @@ export const Game = () => {
                 <div class="flex flex-col items-center">
                     <A
                         class="button"
-                        href="../">
+                        href="/">
                         Back to Home
                     </A>
                     <Timer getSeconds={getSeconds} />
                     <CharacterDisplay getCharacters={getCharacters} />
                     <PictureContainer
-                        setCoordsPx={setCoordsPx}>
+                        setCoordsPx={setCoordsPx}
+                        setCoordsPercent={setCoordsPercent}>
                         <FloatingIcon
                             getCoordsPx={getCoordsPx}
                             getIsCorrect={getIsCorrect} />

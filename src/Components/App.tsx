@@ -11,11 +11,9 @@ export const App = () => {
         Where the Boys At?
       </h1>
       <Routes>
-        <Route path="/WhereTheBoysAt">
           <Route path="/" component={Home} />
           <Route path="/game" component={Game} />
-          <Route path="/scores" component={Scores} />
-        </Route>
+          <Route path="/scores" component={Scores} />  
       </Routes>
     </>
   )

@@ -16,7 +16,7 @@ export const GameOver = ({
                 name: inputRef!.value,
                 seconds
             })
-        history.pushState(null, '', '/WhereTheBoysAt/')
+        history.pushState(null, '', './score')
         history.go()
     }
 
@@ -29,19 +29,19 @@ export const GameOver = ({
                 w-3/4 bg-white p-3 rounded 
                 shadow-neutral-700 shadow-lg opacity-1
                 flex flex-col items-center gap-8">
-                    <h1 class="text-5xl font-bold">
+                    <h1 class="text-5xl font-bold text-center">
                         Game Over!
                     </h1>
                     <div class="text-xl">
                         time: {formatSeconds(seconds).replaceAll(" ", "")}
                     </div>
-                    <div>
+                    <div class="flex flex-col items-center sm:flex-row flex-wrap gap-1 ">
                         <label for="name">Name: </label>
                         <input
                             type="text" 
                             id="name"
                             ref={inputRef}
-                            class="mx-2 shadow shadow-slate-400 rounded"/>
+                            class="mx-2 shadow h-min border border-black shadow-slate-400 rounded"/>
                         <button 
                             class="button inline"
                             onClick={sumbitScore}>
@@ -50,7 +50,7 @@ export const GameOver = ({
                     </div>
                     <div class="flex justify-around gap-5">
                         <A 
-                            href="../" 
+                            href="/" 
                             class="button">
                             Back to Home
                         </A>
