@@ -1,4 +1,5 @@
 import { A } from "@solidjs/router"
+import { createSignal } from "solid-js"
 import { supabase } from "../.."
 import { formatSeconds } from "./Timer"
 
@@ -10,14 +11,16 @@ export const GameOver = ({
     
     let inputRef: HTMLInputElement | undefined
 
+    const [getIsSubmitted, setIsSubmitted] = createSignal(false);
+
     const sumbitScore = async () => {
+        if (getIsSubmitted()) return;
         await supabase.from('scores')
             .insert({
                 name: inputRef!.value,
                 seconds
             })
-        history.pushState(null, '', './score')
-        history.go()
+        setIsSubmitted(true);
     }
 
     return (
@@ -41,9 +44,14 @@ export const GameOver = ({
                             type="text" 
                             id="name"
                             ref={inputRef}
+                            disabled={getIsSubmitted()}
                             class="mx-2 shadow h-min border border-black shadow-slate-400 rounded"/>
                         <button 
                             class="button inline"
+                            style={{
+                                "background-color": getIsSubmitted() ? "lightgreen" : ""
+                            }}
+                            disabled={getIsSubmitted()}
                             onClick={sumbitScore}>
                             Submit Score
                         </button>
@@ -59,6 +67,11 @@ export const GameOver = ({
                             onClick={() => location.reload()}>
                             Play Again
                         </button>
+                        <A 
+                            href="/scores"
+                            class="button">
+                            View Scores
+                        </A>
                     </div>
                 </div>
         </div>
